@@ -1,0 +1,221 @@
+#vc-mctrls-player {
+    padding: 12px;
+    background: var(--background-base-low);
+    margin: 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: 1px solid var(--border-subtle);
+
+    /* so custom themes can easily change it */
+    --vc-mctrls-green: var(--mctrls, #1db954);
+    --vc-mctrls-green-90: color-mix(in hsl, var(--vc-mctrls-green), transparent 90%);
+    --vc-mctrls-green-80: color-mix(in hsl, var(--vc-mctrls-green), transparent 80%);
+}
+
+.vc-mctrls-button {
+    margin: 0 2px;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--interactive-icon-default);
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vc-mctrls-button:hover {
+    color: var(--interactive-icon-hover);
+    background-color: var(--background-mod-strong);
+}
+
+.vc-mctrls-button-icon {
+    height: 24px;
+    width: 24px;
+}
+
+.vc-mctrls-shuffle .vc-mctrls-button-icon,
+.vc-mctrls-repeat .vc-mctrls-button-icon {
+    width: 22px;
+    height: 22px;
+}
+
+/* .vc-mctrls-button:hover {
+    filter: brightness(1.3);
+} */
+
+.vc-mctrls-repeat-context,
+.vc-mctrls-repeat-track,
+.vc-mctrls-shuffle-on {
+    background-color: var(--vc-mctrls-green-90);
+}
+
+.vc-mctrls-repeat-context:hover,
+.vc-mctrls-repeat-track:hover,
+.vc-mctrls-shuffle-on:hover {
+    background-color: var(--vc-mctrls-green-80);
+}
+
+.vc-mctrls-tooltip-text {
+    overflow: hidden;
+    white-space: nowrap;
+    padding-right: 0.2em;
+    max-width: 100%;
+    margin: unset;
+}
+
+.vc-mctrls-repeat-1 {
+    font-size: 70%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.vc-mctrls-button-row {
+    justify-content: center;
+    margin-top: 14px;
+}
+
+.vc-mctrls-secondary-song-info {
+    font-size: 12px;
+}
+
+.vc-mctrls-song-info-prefix {
+    display: none;
+}
+
+#vc-mctrls-info-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 3em;
+    gap: 0.5em;
+}
+
+#vc-mctrls-album-image {
+    height: 90%;
+    object-fit: contain;
+    border-radius: 3px;
+    transition: filter 0.2s;
+}
+
+#vc-mctrls-album-image:hover {
+    filter: brightness(1.2);
+    cursor: pointer;
+}
+
+#vc-mctrls-album-expanded-wrapper #vc-mctrls-album-image {
+    width: 100%;
+    object-fit: contain;
+}
+
+#vc-mctrls-titles {
+    display: flex;
+    flex-direction: column;
+    padding: 0.2rem;
+    align-items: flex-start;
+    place-content: flex-start center;
+    overflow: hidden;
+}
+
+#vc-mctrls-song-title {
+    color: var(--text-strong);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.vc-mctrls-ellipoverflow {
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+    text-overflow: ellipsis;
+}
+
+.vc-mctrls-artist,
+.vc-mctrls-album {
+    font-size: 12px;
+    text-decoration: none;
+    color: var(--text-strong);
+}
+
+.vc-mctrls-comma {
+    color: var(--text-default);
+}
+
+.vc-mctrls-artist[role="link"]:hover,
+#vc-mctrls-album-title[role="link"]:hover,
+#vc-mctrls-song-title[role="link"]:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#vc-mctrls-progress-bar {
+    position: relative;
+    color: var(--text-default);
+    width: 100%;
+    margin: 0.5em 0;
+    margin-bottom: 5px;
+}
+
+#vc-mctrls-progress-bar > [class*="slider"] {
+    flex-grow: 1;
+    width: 100%;
+    padding: 0 !important;
+}
+
+#vc-mctrls-progress-bar > [class*="slider"] [class*="bar"] {
+    height: 3px !important;
+    top: calc(12px - 4px / 2 + var(--bar-offset));
+}
+
+#vc-mctrls-progress-bar > [class*="slider"] [class*="barFill"] {
+    background-color: var(--interactive-icon-active);
+}
+
+#vc-mctrls-progress-bar > [class*="slider"]:hover [class*="barFill"] {
+    background-color: var(--vc-mctrls-green);
+}
+
+#vc-mctrls-progress-bar > [class*="slider"] [class*="grabber"] {
+    /* these importants are necessary, it applies a width and height through inline styles */
+    height: 16px !important;
+    width: 16px !important;
+    margin-top: calc(17px/-2 + var(--bar-offset)/2);
+    margin-left: -0.5px;
+    background-color: var(--interactive-icon-active);
+    border-color: var(--interactive-icon-default);
+    color: var(--interactive-icon-default);
+    opacity: 0;
+    transition: opacity 0.1s;
+}
+
+#vc-mctrls-progress-bar:hover > [class*="slider"] [class*="grabber"] {
+    opacity: 1;
+}
+
+#vc-mctrls-progress-text {
+    margin: 0;
+}
+
+.vc-mctrls-progress-time {
+    font-size: 12px;
+    top: 10px;
+    position: absolute;
+    margin-top: 8px;
+    font-family: var(--font-code);
+}
+
+.vc-mctrls-time-left {
+    left: 0;
+}
+
+.vc-mctrls-time-right {
+    right: 0;
+}
+
+.vc-mctrls-fallback {
+    padding: 0.5em;
+    color: var(--text-default);
+}
