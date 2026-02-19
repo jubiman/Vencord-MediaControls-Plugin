@@ -6,7 +6,7 @@ At some point it would be nice to merge these plugins (especially since they are
 
 For now, I have only tested it to work with the Strawberry media player on Linux.\
 Theoretically it should work with any other local media player, which can easily be added in the settings.\
-In the future I might add out-of-box support for other media players and platforms as well.\
+In the future I might add out-of-box support for other media players and platforms as well.
 
 ### DO NOT USE SPOTIFY CONTROLS AND THIS PLUGIN AT THE SAME TIME
 To put it simply: the way this plugin and Spotify Controls render the modal is exactly the same, and thus mutually exclusive.
