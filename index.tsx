@@ -32,7 +32,6 @@ function toggleHoverControls(value: boolean) {
     (value ? enableStyle : disableStyle)(hoverOnlyStyle);
 }
 
-
 interface MediaPlayerSettingProps {
     playerName: string;
 }
@@ -265,7 +264,7 @@ const settings = definePluginSettings({
         default: {
             // TODO: should default be filled? probably with more than 1 player at least, but idk if enabled (and what to do about priority)
             strawberry: {
-                enabled: true,
+                enabled: false,
                 priority: 0,
             }
         } as MediaPlayerSettings, // media player name (e.g. "strawberry", "elisa" etc.) -> settings for that media player
