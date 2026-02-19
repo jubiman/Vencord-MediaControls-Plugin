@@ -13,8 +13,8 @@ To put it simply: the way this plugin and Spotify Controls render the modal is e
 I don't think I will be trying to find a fix for this, as merging the two plugins would be a much better solution.
 
 # DISCLAIMER
-This plugin currently only supports the `playerctl` interface. MAKE SURE YOU INSTALL `playerctl` ON YOUR SYSTEM.\
-To my knowledge, `playerctl` is only supported on Linux (and possibly MacOS with some workarounds).
+This plugin currently only supports the `playerctl`([GitHub](https://github.com/altdesktop/playerctl)) interface. MAKE SURE YOU INSTALL [`playerctl`](https://github.com/altdesktop/playerctl) ON YOUR SYSTEM.\
+To my knowledge, [`playerctl`](https://github.com/altdesktop/playerctl) is only supported on Linux (and possibly MacOS with some workarounds).
 The plugin is also somewhat early into development, so expect bugs. Feel free to open an issue or pull request.
 
 
