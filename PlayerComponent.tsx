@@ -377,8 +377,11 @@ export function Player() {
     const track = useStateFromStores(
         [MediaStore],
         () => MediaStore.track,
-        null,
-        (prev, next) => prev?.trackid ? (prev.trackid === next?.trackid) : prev?.title === next?.title
+        // Leaving this out because for some reason this makes it so that if I start playing 1st song of playlist A
+        // and then switch to 1st song of playlist B, only the position and length correctly update, but not the metadata.
+        // I have only tested it in strawberry and idk why it happens but leaving this out fixes it so cry me a river.
+        // null,
+        // (prev, next) => prev?.trackid ? (prev.trackid === next?.trackid) : prev?.title === next?.title
     );
 
     const isPlaying = useStateFromStores([MediaStore], () => MediaStore.isPlaying);

@@ -100,17 +100,9 @@ const PlayerctlInterface = {
         return parseMetadata(metadataStr.split("\n"));
     },
     async Play(): Promise<void> {
-        // if (PlayerctlInterface.currentPlayer === MediaPlayers.Strawberry)
-        //     // workaround for the fact strawberry doesn't adhere to the MPRIS specification
-        //     await PlayerctlInterface.PlayPause();
-        // else
         await runPlayerctlCommand(["play"]);
     },
     async Pause(): Promise<void> {
-        // if (PlayerctlInterface.currentPlayer === MediaPlayers.Strawberry)
-        //     // workaround for the fact strawberry doesn't adhere to the MPRIS specification
-        //     await PlayerctlInterface.PlayPause();
-        // else
         await runPlayerctlCommand(["pause"]);
     },
     async PlayPause(): Promise<void> {
@@ -148,7 +140,7 @@ const PlayerctlInterface = {
     async SetPositionDelta(deltaMilli: number): Promise<void> {
         const deltaSeconds = deltaMilli / 1_000;
         const sign = deltaSeconds >= 0 ? "+" : "-";
-        await runPlayerctlCommand(["position", `${deltaSeconds}${sign}`]);
+        await runPlayerctlCommand(["position", `${Math.abs(deltaSeconds)}${sign}`]);
     },
     /**
      * Get loop status, can be "None", "Track" or "Playlist"
@@ -193,13 +185,15 @@ const PlayerctlInterface = {
     /**
      * Create a PlaybackInfo object and emit it to the frontend. This is used to update the playback info in the frontend when there are changes in the playerctl listeners.
      * @param e IpcMainInvokeEvent to send the playback info back to the frontend
-     * @param status Optional playback status to include in the emitted info. If not provided, it will be fetched from playerctl.
-     * @param metadata Optional metadata to include in the emitted info. If not provided, it will be fetched from playerctl.
+     * @param opts Optional object containing status and metadata to include in the emitted info. If not provided, both will be fetched from playerctl.
+     * @throws Error if fetching metadata or playback status fails, and they are not provided in opts. This is usually due to the selected players not being active.
      */
-    async createPlaybackInfoAndEmit(e: IpcMainInvokeEvent, { status, metadata}: {
-        status?: PlaybackStatus,
-        metadata?: PlayerctlMetadata
-    } = {}) {
+    async createPlaybackInfoAndEmit(
+        e: IpcMainInvokeEvent,
+        opts?: { status?: PlaybackStatus; metadata?: PlayerctlMetadata } | null
+    ) {
+        let { status, metadata } = opts ?? {};
+
         if (!metadata) metadata = await this.GetMetadata();
         if (!status) status = await this.GetPlaybackStatus();
 
@@ -262,12 +256,15 @@ const PlayerctlInterface = {
     },
 
     SetCurrentPlayer(e: IpcMainInvokeEvent, player: MediaPlayer): void {
+        if (PlayerctlInterface.currentPlayer === player) return;
+
         PlayerctlInterface.currentPlayer = player;
         if (player === MediaPlayer.Strawberry && !this.metadataListener) {
             // Strawberry doesn't update metadata on playback status changes, so we need to listen for metadata changes as well
             this.metadataListener = execFile("playerctl", [playersArg, "--follow", "metadata", "--format", metadataFormatArg]);
             this.metadataListener.stdout?.on("data", async (data: Buffer) => {
                 const metadata = parseMetadata(data.toString().split("\n"));
+
                 // Strawberry specific: we are guaranteed to get a 2nd update with the cover art url,
                 // so we ignore the first update which doesn't have it. This prevents us from having to handle the cover art twice in the frontend.
                 // And also solves the issue where the frontend doesn't listen to the 2nd update...
@@ -301,7 +298,7 @@ const PlayerctlInterface = {
         });
 
         if (!exists) {
-            console.error("playerctl is not installed. Please install it to use the media player controls plugin.");
+            console.error("[VencordMediaControl] playerctl is not installed. Please install it to use the media player controls plugin.");
             await e.sender.executeJavaScript(
                 "void Vencord.Plugins.plugins.MediaPlayerControls.onPlayerctlNotFound();"
             );
@@ -317,10 +314,13 @@ const PlayerctlInterface = {
             await debugLog(e, "Playerctl listeners already running, sending current playback info");
 
             // send the current data since it will probably have been restarted
-            return await this.createPlaybackInfoAndEmit(e);
+            try {
+                await this.createPlaybackInfoAndEmit(e);
+            } catch (err) {
+                await debugLog(e, "[VencordMediaPlayerControls] Failed to fetch playback info, likely due to no active players. Error:", err);
+            }
+            return;
         }
-
-        await debugLog(e, "[VencordMediaPlayerControls] Starting playerctl listeners with playerArg:", playersArg);
 
         // Using playerctl --follow to listen for changes in metadata and playback status
         this.statusListener = execFile("playerctl", [playersArg, "--follow", "status"]);
@@ -460,7 +460,6 @@ export async function callPlayerctl(_: IpcMainInvokeEvent, command: string, ...a
 }
 
 export async function startPlayerctlListener(e: IpcMainInvokeEvent, mediaPlayerSettings: MediaPlayerSettings) {
-    await debugLog(e, "Starting playerctl listener with settings:", mediaPlayerSettings);
     await PlayerctlInterface.Start(e, mediaPlayerSettings);
 }
 

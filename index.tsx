@@ -308,7 +308,7 @@ export default definePlugin({
     onPlaybackStatusChanged(status: string, positionMilli: number) {
         MediaStore.isPlaying = status === "Playing";
         MediaStore.position = positionMilli;
-        MediaStore.emitChange();
+        MediaStore.markDirty();
     },
 
     onPlaybackInfoChanged(playbackInfo: PlaybackInfo) {
@@ -317,22 +317,22 @@ export default definePlugin({
 
     onPositionChanged(positionMilli: number) {
         MediaStore.position = positionMilli;
-        MediaStore.emitChange();
+        MediaStore.markDirty();
     },
 
     onShuffleChanged(shuffle: boolean) {
         MediaStore.shuffle = shuffle;
-        MediaStore.emitChange();
+        MediaStore.markDirty();
     },
 
     onLoopStatusChanged(loopStatus: LoopStatus) {
         MediaStore.repeat = loopStatus;
-        MediaStore.emitChange();
+        MediaStore.markDirty();
     },
 
     onVolumeChanged(volume: number) {
         MediaStore.volume = volume;
-        MediaStore.emitChange();
+        MediaStore.markDirty();
     },
 
     onPlayerctlNotFound() {

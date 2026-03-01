@@ -70,8 +70,7 @@ export const MediaStore = proxyLazyWebpack(() => {
             this.isSettingPosition = false;
 
             // Because this seems to do nothing, we use isDirty flag
-            this.isDirty = true;
-            this.emitChange(); // TODO: does this do anything then?
+            this.markDirty();
         }
 
         // Need to keep track of this manually
@@ -86,6 +85,11 @@ export const MediaStore = proxyLazyWebpack(() => {
         public set position(p: number) {
             this.positionMilli = p;
             this._start = Date.now();
+        }
+
+        markDirty() {
+            this.isDirty = true;
+            this.emitChange(); // TODO: does this do anything then?
         }
 
         markClean() {
