@@ -1,3 +1,6 @@
+# THIS REPOSITORY HAS BEEN MOVED
+See the new repo at https://git.jubiman.com/jubiman/Vencord-MediaControls-Plugin
+
 # Media Player Controls
 Maybe at some point a replacement for SpotifyControls, for now only works on Linux
 
